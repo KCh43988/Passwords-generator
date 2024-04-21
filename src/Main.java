@@ -126,7 +126,7 @@ class PasswordGenerator {
                 rand1 += 64;
                 result = (char) rand1;
             } else if (rand1 < 37 /**63**/) {
-                // цыфры
+                // цифры
                 rand2 += 48;
                 result = (char) rand2;
             } else {
