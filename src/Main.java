@@ -151,7 +151,7 @@ class PasswordSaverScreen {
         JLabel jl2 = new JLabel("Login");
         JLabel jl3 = new JLabel("Link");
         JTextField jtf1 = new JTextField(password, 14);
-        JTextField jtf2 = new JTextField(15);
+        JTextField jtf2 = new JTextField(14);
         JTextField jtf3 = new JTextField(15);
         jFrame.setLayout(new GridLayout(4, 2));
         jFrame.add(jl1);
