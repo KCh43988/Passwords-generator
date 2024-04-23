@@ -212,7 +212,7 @@ class MainScreen {
         listModel.add(0, "Легкий");
         listModel.add(1, "Нормальный");
         listModel.add(2, "Хороший");
-        frame.setSize(600, 500);
+        frame.setSize(600, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setLayout(new FlowLayout());
