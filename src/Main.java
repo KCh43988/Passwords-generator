@@ -1,10 +1,8 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -20,13 +18,11 @@ class DataBase {
         this.st = connection.createStatement();
     }
 
-    public boolean savePassword(String login, String password, String link) {
+    public void savePassword(String login, String password, String link) {
         try {
             st.execute("INSERT INTO my_passwords (login, password, link) VALUES ('" + login + "', '" + password + "', '" + link + "')");
-            return true;
         } catch (Exception e) {
-            System.err.println(e);
-            return false;
+            System.err.println(e.getMessage());
         }
     }
 
@@ -44,7 +40,7 @@ class DataBase {
             return list;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            return new ArrayList<String[]>();
+            return new ArrayList<>();
         }
     }
 }
@@ -55,20 +51,20 @@ class PasswordGenerator {
     char[] chars = {'{', '}', '(', ')', '[', ']', '^', '?', '!', '#', '$', '%', '&', '*'};
 
     public String generatePassword(int difficulty, int length) {
-        password = "";
+        StringBuilder passwordBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
             try {
-                password += generateChar(difficulty);
+                passwordBuilder.append(generateChar(difficulty));
             } catch (Exception e) {
                 return "неправильный ввод";
             }
         }
-
+        password = passwordBuilder.toString();
         return password;
     }
 
     public char generateChar(int difficulty) throws Exception {
-        char result = '_';
+        char result;
         if (difficulty == 1) {
             // 26 + 26 + 10 + 4 = 66
             int rand1 = random.nextInt(1, 67);
@@ -96,15 +92,15 @@ class PasswordGenerator {
             int rand2 = random.nextInt(0, 10);
             int rand3 = random.nextInt(0, 9);
 
-            if (rand1 < 20 /**27**/) {
+            if (rand1 < 20 /*27*/) {
                 // гласные малые -7 последних
                 rand1 += 96;
                 result = (char) rand1;
-            } else if (rand1 < 39 /**53**/) {
+            } else if (rand1 < 39 /*53*/) {
                 // гласные заглавные -7 вначале
                 rand1 += 52;
                 result = (char) rand1;
-            } else if (rand1 < 49 /**63**/) {
+            } else if (rand1 < 49 /*63*/) {
                 // цыфры
                 rand2 += 48;
                 result = (char) rand2;
@@ -117,15 +113,15 @@ class PasswordGenerator {
             int rand2 = random.nextInt(0, 10);
             int rand3 = random.nextInt(0, 14);
 
-            if (rand1 < 14 /**27**/) {
+            if (rand1 < 14 /*27*/) {
                 // гласные малые -13 последних
                 rand1 += 96;
                 result = (char) rand1;
-            } else if (rand1 < 27 /**53**/) {
+            } else if (rand1 < 27 /*53*/) {
                 // гласные заглавные -13 вначале
                 rand1 += 64;
                 result = (char) rand1;
-            } else if (rand1 < 37 /**63**/) {
+            } else if (rand1 < 37 /*63*/) {
                 // цифры
                 rand2 += 48;
                 result = (char) rand2;
@@ -188,8 +184,8 @@ class ListSavedPasswords {
         tableModel.addColumn("Login");
         tableModel.addColumn("Password");
         tableModel.addColumn("Link");
-        for (int i = 0; i < list.size(); i++) {
-            tableModel.addRow(list.get(i));
+        for (String[] strings : list) {
+            tableModel.addRow(strings);
         }
         JTable jTable = new JTable(tableModel);
         ScrollPane scrollPane = new ScrollPane(1);
@@ -232,6 +228,6 @@ class MainScreen {
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        MainScreen mainScreen = new MainScreen();
+        new MainScreen();
     }
 }
