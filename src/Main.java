@@ -81,7 +81,7 @@ class PasswordGenerator {
                 result = (char) rand1;
             } else if (rand1 < 53) {
                 // гласные заглавные
-                rand1 += 37;
+                rand1 += 38;
                 result = (char) rand1;
             } else if (rand1 < 63) {
                 // цыфры
