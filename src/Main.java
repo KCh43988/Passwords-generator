@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Класс подключающий базу данных
+ * @author a1010
+ */
 class DataBase {
     String url = "jdbc:postgresql://localhost:5432/postgres";
     String DB_username = "postgres";
@@ -13,11 +17,21 @@ class DataBase {
     Connection connection;
     Statement st;
 
+    /**
+     * Создает соединение с базой данных
+     * @throws SQLException возникает если логин или пароль неправильный
+     */
     public DataBase() throws SQLException {
         this.connection = DriverManager.getConnection(url, DB_username, DB_password);
         this.st = connection.createStatement();
     }
 
+    /**
+     * Метод, который позволяет сохранять данные о пользователе
+     * @param login логин пользователя
+     * @param password пароль пользователя
+     * @param link ссылка, где используется пароль
+     */
     public void savePassword(String login, String password, String link) {
         try {
             st.execute("INSERT INTO my_passwords (login, password, link) VALUES ('" + login + "', '" + password + "', '" + link + "')");
@@ -26,6 +40,10 @@ class DataBase {
         }
     }
 
+    /**
+     * Метод берущий данные о пользователях из базы данных
+     * @return возвращает ArrayList из данных пользователей (логин, пароль, ссылка)
+     */
     public List<String[]> getPasswords() {
         List<String[]> list = new ArrayList<>();
         try {
