@@ -145,6 +145,14 @@ class PasswordGenerator {
 
 class PasswordSaverScreen {
     public PasswordSaverScreen(String password) {
+        DataBase db;
+        try {
+            db = new DataBase();
+        }
+        catch (SQLException exception){
+            System.err.println(exception.getMessage());
+            return;
+        }
         JFrame jFrame = new JFrame("Password saver");
         JButton jButton = new JButton("Save");
         JLabel jl1 = new JLabel("Password");
@@ -162,13 +170,8 @@ class PasswordSaverScreen {
         jFrame.add(jtf3);
         jFrame.add(jButton);
         jButton.addActionListener(e -> {
-            try {
-                new DataBase().savePassword(jtf1.getText(), jtf2.getText(), jtf3.getText());
-                jFrame.add(new JLabel("Saved"));
-            } catch (SQLException ex) {
-                System.err.println(ex.getMessage());
-                jFrame.add(new JLabel("Not saved"));
-            }
+            db.savePassword(jtf1.getText(), jtf2.getText(), jtf3.getText());
+            jFrame.add(new JLabel("Saved"));
             jFrame.repaint();
             jFrame.invalidate();
             jFrame.validate();
