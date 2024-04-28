@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Класс подключающий базу данных
+ * Класс, подключающий базу данных
+ *
  * @author a1010
  */
 class DataBase {
@@ -19,6 +20,7 @@ class DataBase {
 
     /**
      * Создает соединение с базой данных
+     *
      * @throws SQLException возникает если логин или пароль неправильный
      */
     public DataBase() throws SQLException {
@@ -28,9 +30,10 @@ class DataBase {
 
     /**
      * Метод, который позволяет сохранять данные о пользователе
-     * @param login логин пользователя
+     *
+     * @param login    логин пользователя
      * @param password пароль пользователя
-     * @param link ссылка, где используется пароль
+     * @param link     ссылка, где используется пароль
      */
     public void savePassword(String login, String password, String link) {
         try {
@@ -42,6 +45,7 @@ class DataBase {
 
     /**
      * Метод берущий данные о пользователях из базы данных
+     *
      * @return возвращает ArrayList из данных пользователей (логин, пароль, ссылка)
      */
     public List<String[]> getPasswords() {
@@ -63,11 +67,23 @@ class DataBase {
     }
 }
 
+/**
+ * Класс, который генерирует пароли, состоящие из различных спец. символов, цифр и букв
+ *
+ * @author a1010
+ */
 class PasswordGenerator {
     Random random = new Random();
     String password = "";
     char[] chars = {'{', '}', '(', ')', '[', ']', '^', '?', '!', '#', '$', '%', '&', '*'};
 
+    /**
+     * Метод, который вызывает метод generateChar length (длинна пароля) раз, тем самым постепенно генерируя пароль
+     *
+     * @param difficulty сложность пароля (от нее зависит шанс генерации спец. символов и букв)
+     * @param length     длинна пароля
+     * @return возвращает сгенерированный пароль или "неправильный ввод", при какой либо ошибке
+     */
     public String generatePassword(int difficulty, int length) {
         StringBuilder passwordBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
@@ -81,10 +97,16 @@ class PasswordGenerator {
         return password;
     }
 
+    /**
+     * Метод, который принимает сложность пароля, и исходя из этого случайным образом выбирает char (у сложностей разные шансы генерации букв и спец. символов, чем выше сложность, тем выше шанс генерации спец. символа, а с буквами наоборот, чем сложность выше, тем шанс ниже)
+     *
+     * @param difficulty сложность пароля (от нее зависит шанс генерации спец. символов и букв)
+     * @return возвращает char сгенерированный случайным образом или вызывает сам себя при генерации неправильных символов
+     * @throws Exception возникает, при генерации неправильных символов
+     */
     public char generateChar(int difficulty) throws Exception {
         char result;
         if (difficulty == 1) {
-            // 26 + 26 + 10 + 4 = 66
             int rand1 = random.nextInt(1, 67);
             int rand2 = random.nextInt(0, 10);
             int rand3 = random.nextInt(0, 4);
@@ -157,13 +179,22 @@ class PasswordGenerator {
     }
 }
 
+/**
+ * Класс, открывающий окно для сохранения пароля, логина и линка в базу данных
+ *
+ * @author a1010
+ */
 class PasswordSaverScreen {
+    /**
+     * Метод, открывающий окно для сохранения пароля, логина и линка в базу данных
+     *
+     * @param password сгенерированный пароль
+     */
     public PasswordSaverScreen(String password) {
         DataBase db;
         try {
             db = new DataBase();
-        }
-        catch (SQLException exception){
+        } catch (SQLException exception) {
             System.err.println(exception.getMessage());
             return;
         }
@@ -172,9 +203,10 @@ class PasswordSaverScreen {
         JLabel jl1 = new JLabel("Password");
         JLabel jl2 = new JLabel("Login");
         JLabel jl3 = new JLabel("Link");
-        JTextField jtf1 = new JTextField(password, 14);
-        JTextField jtf2 = new JTextField(14);
+        JTextField jtf1 = new JTextField(password, 15);
+        JTextField jtf2 = new JTextField(15);
         JTextField jtf3 = new JTextField(15);
+        JTextField jtf4 = new JTextField(15);
         jFrame.setLayout(new GridLayout(4, 2));
         jFrame.add(jl1);
         jFrame.add(jtf1);
@@ -183,9 +215,10 @@ class PasswordSaverScreen {
         jFrame.add(jl3);
         jFrame.add(jtf3);
         jFrame.add(jButton);
+        jFrame.add(jtf4);
         jButton.addActionListener(e -> {
             db.savePassword(jtf1.getText(), jtf2.getText(), jtf3.getText());
-            jFrame.add(new JLabel("Saved"));
+            jtf4.setText("Saved");
             jFrame.repaint();
             jFrame.invalidate();
             jFrame.validate();
@@ -195,7 +228,17 @@ class PasswordSaverScreen {
     }
 }
 
+/**
+ * Класс, который открывает окно со всеми сохраненными паролями, логинами и линками
+ *
+ * @author a1010
+ */
 class ListSavedPasswords {
+    /**
+     * Метод, который открывает окно со всеми сохраненными паролями, логинами и линками
+     *
+     * @param list лист в котором хранятся все пароли, логины и линки
+     */
     public ListSavedPasswords(List<String[]> list) {
         JFrame jFrame = new JFrame("Saved password");
         DefaultTableModel tableModel = new DefaultTableModel();
@@ -214,9 +257,20 @@ class ListSavedPasswords {
     }
 }
 
+/**
+ * Класс, который открывает окно главного экрана
+ *
+ * @author a1010
+ */
 class MainScreen {
+
     JFrame frame = new JFrame("Password Generator");
 
+    /**
+     * Метод, который открывает окно главного экрана
+     *
+     * @throws SQLException возникает при неполадках с базой данных
+     */
     public MainScreen() throws SQLException {
         PasswordGenerator passwordGenerator = new PasswordGenerator();
         DataBase dataBase = new DataBase();
