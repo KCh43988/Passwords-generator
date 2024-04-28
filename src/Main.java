@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +15,22 @@ import java.util.Random;
 class DataBase {
     String url = "jdbc:postgresql://localhost:5432/postgres";
     String DB_username = "postgres";
-    String DB_password = "GlucK257";
+    String DB_password = "";
     Connection connection;
     Statement st;
+
+    private String readPassword(InputStream inputStream)
+            throws IOException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br
+                     = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                resultStringBuilder.append(line).append("\n");
+            }
+        }
+        return resultStringBuilder.toString();
+    }
 
     /**
      * Создает соединение с базой данных
@@ -24,7 +38,14 @@ class DataBase {
      * @throws SQLException возникает если логин или пароль неправильный
      */
     public DataBase() throws SQLException {
-        this.connection = DriverManager.getConnection(url, DB_username, DB_password);
+        try {
+            DB_password = readPassword(new FileInputStream("login_password.txt"));
+            this.connection = DriverManager.getConnection(url, DB_username, DB_password);
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        assert connection != null;
         this.st = connection.createStatement();
     }
 
