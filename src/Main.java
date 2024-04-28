@@ -40,6 +40,7 @@ class DataBase {
     public DataBase() throws SQLException {
         try {
             DB_password = readPassword(new FileInputStream("login_password.txt"));
+            DB_password = DB_password.substring(0, DB_password.length() - 1);
             this.connection = DriverManager.getConnection(url, DB_username, DB_password);
         }
         catch (IOException e) {
