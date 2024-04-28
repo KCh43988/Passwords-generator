@@ -227,7 +227,7 @@ class PasswordSaverScreen {
         JTextField jtf1 = new JTextField(password, 15);
         JTextField jtf2 = new JTextField(15);
         JTextField jtf3 = new JTextField(15);
-        JTextField jtf4 = new JTextField(15);
+        JLabel jl4 = new JLabel();
         jFrame.setLayout(new GridLayout(4, 2));
         jFrame.add(jl1);
         jFrame.add(jtf1);
@@ -236,10 +236,10 @@ class PasswordSaverScreen {
         jFrame.add(jl3);
         jFrame.add(jtf3);
         jFrame.add(jButton);
-        jFrame.add(jtf4);
+        jFrame.add(jl4);
         jButton.addActionListener(e -> {
             db.savePassword(jtf1.getText(), jtf2.getText(), jtf3.getText());
-            jtf4.setText("Saved");
+            jl4.setText("Saved");
             jFrame.repaint();
             jFrame.invalidate();
             jFrame.validate();
